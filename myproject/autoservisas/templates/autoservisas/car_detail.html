@@ -1,0 +1,16 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<section>
+    <h2>{{ car.license_plate }}</h2>
+    <ul class="list-group"></ul>
+        <li class="list-group-item">{% trans 'Owner'%}: {{ car.client }}</li>
+        <li class="list-group-item">{% trans 'Model'%}: {{ car.car_model.model }}</li>
+        <li class="list-group-item">{% trans 'Brand'%}: {{ car.car_model.brand }}</li>
+        <li class="list-group-item">{% trans 'Engine'%}: {{ car.car_model.engine }}</li>
+        <li class="list-group-item">{% trans 'Year'%}: {{ car.car_model.make_year }}</li>
+        <li class="list-group-item">{% trans 'VIN'%}: {{ car.vin }}</li>
+    </ul>
+</section>
+{% endblock content %}

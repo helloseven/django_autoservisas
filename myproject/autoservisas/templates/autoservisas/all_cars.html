@@ -1,0 +1,13 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<section>
+    <h2>{% trans 'All Cars'%}</h2>
+    <ul class="list-group">
+        {% for car in cars %}
+        <li class="list-group-item"> {{car.id}} : <a href="{% url 'car-detail' car.id %}">{{ car.car_model.brand }} {{car.car_model.model}} {{ car.license_plate }}</a></li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock content %}

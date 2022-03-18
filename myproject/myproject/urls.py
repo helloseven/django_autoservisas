@@ -20,6 +20,7 @@ from django.views.generic import RedirectView
 
 
 urlpatterns = [
+    path('rosetta/', include('rosetta.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
 

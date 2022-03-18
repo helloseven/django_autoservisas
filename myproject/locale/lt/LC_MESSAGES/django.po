@@ -8,17 +8,128 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-16 12:14+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2022-03-17 18:38+0200\n"
+"PO-Revision-Date: 2022-03-17 18:40+0200\n"
+"Last-Translator:   <superuser@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Translated-Using: django-rosetta 0.9.8\n"
+
+#: autoservisas/admin.py:35 autoservisas/models.py:46
+msgid "Services"
+msgstr "Paslaugos"
+
+#: autoservisas/models.py:10
+msgid "Brand"
+msgstr "Markė"
+
+#: autoservisas/models.py:11
+msgid "Model"
+msgstr "Modelis"
+
+#: autoservisas/models.py:12
+msgid "Engine"
+msgstr "Varyklis"
+
+#: autoservisas/models.py:13
+msgid "Make Year"
+msgstr "Pagaminimo metai"
+
+#: autoservisas/models.py:17
+msgid "Car Model"
+msgstr "Mašinos Modelis"
+
+#: autoservisas/models.py:18
+msgid "Car Models"
+msgstr "Mašinos Modeliai"
+
+#: autoservisas/models.py:25
+msgid "License Plate"
+msgstr ""
+
+#: autoservisas/models.py:27
+msgid "VIN code"
+msgstr ""
+
+#: autoservisas/models.py:32
+msgid "Car"
+msgstr ""
+
+#: autoservisas/models.py:33
+msgid "Cars"
+msgstr ""
+
+#: autoservisas/models.py:40
+msgid "Name"
+msgstr ""
+
+#: autoservisas/models.py:41 autoservisas/models.py:78
+msgid "Price"
+msgstr ""
+
+#: autoservisas/models.py:45 autoservisas/models.py:55
+msgid "Service"
+msgstr ""
+
+#: autoservisas/models.py:53
+msgid "Created at"
+msgstr ""
+
+#: autoservisas/models.py:55
+msgid "Select services for this order"
+msgstr ""
+
+#: autoservisas/models.py:56
+msgid "Total"
+msgstr ""
+
+#: autoservisas/models.py:60
+msgid "Order"
+msgstr ""
+
+#: autoservisas/models.py:61
+msgid "Orders"
+msgstr ""
+
+#: autoservisas/models.py:75
+msgid "Unique UUID for this Order Instance."
+msgstr ""
+
+#: autoservisas/models.py:77
+msgid "Quantity"
+msgstr ""
+
+#: autoservisas/models.py:81
+msgid "None"
+msgstr ""
+
+#: autoservisas/models.py:82
+msgid "Accepted"
+msgstr ""
+
+#: autoservisas/models.py:83
+msgid "Fixed"
+msgstr ""
+
+#: autoservisas/models.py:84
+msgid "Declined"
+msgstr ""
+
+#: autoservisas/models.py:87
+msgid "Status"
+msgstr ""
+
+#: autoservisas/models.py:91
+msgid "Order Instance"
+msgstr ""
+
+#: autoservisas/models.py:92
+msgid "Order Instances"
+msgstr ""
 
 #: autoservisas/views.py:8
 msgid "Welcome to index."

@@ -1,0 +1,33 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<h2>{% trans 'All Orders'%}</h2>
+{% if orders %}
+    {% for order in orders %}
+        <ul class="list-group mb-4"> 
+            <li class="list-group-item"><a href="{%url 'order-detail' order.id%}">{%trans 'ID' %}: {{order.id}}</a></li>
+            <li class="list-group-item">{%trans 'Services' %}: {% for service in order.service.all %} {{ service.name }}, {% endfor %} </li> 
+            <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li>   
+        </ul>
+    {% endfor %}
+    <nav aria-label="...">
+        {% if page_obj.has_other_pages %}
+            <ul class="pagination pagination-sm justify-content-end">
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </nav>
+{% endif %}
+
+{% endblock content %}
