@@ -3,6 +3,7 @@ from django.db import models
 from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
+from PIL import Image
 import uuid
 
 
@@ -26,11 +27,20 @@ class Car(models.Model):
     car_model = models.ForeignKey('CarModel', on_delete=models.SET_NULL, null=True, related_name='cars')
     vin = models.CharField(_('VIN code'), max_length=200)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    image = models.ImageField(_('Image'), upload_to='img', null=True, blank=True)
 
     class Meta:
         ordering = ['client', 'car_model_id']
         verbose_name = _('Car')
         verbose_name_plural = _('Cars')
+
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     img = Image.open(self.image.path)
+    #     if img.height > 300 or img.width > 300:
+    #         output_size = (300, 300)
+    #         img.thumbnail(output_size)
+    #         img.save(self.image.path)
 
     def __str__(self) -> str:
         return f'{self.car_model.brand} {self.car_model.model} {self.license_plate} {self.client}'

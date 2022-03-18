@@ -1,14 +1,18 @@
 {% extends 'autoservisas/base.html' %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block content %}
 <section>
     <h2>{% trans 'All Cars'%}</h2>
-    <ul class="list-group">
-        {% for car in cars %}
-        <li class="list-group-item"> {{car.id}} : <a href="{% url 'car-detail' car.id %}">{{ car.car_model.brand }} {{car.car_model.model}} {{ car.license_plate }}</a></li>
-        {% endfor %}
-    </ul>
+    {% if cars %}
+        <ul class="list-group">
+            {% for car in cars %}
+            <li class="list-group-item"> {{car.id}} : <a href="{% url 'car-detail' car.id %}">{{ car.car_model.brand }} {{car.car_model.model}} {{ car.license_plate }}</a></li>
+            <img class="img-thumbnail" src="{% if car.image %}{{ car.image.url }}{% else %}{% static 'autoservisas/img/default.png' %}{% endif %}" alt="Image of a car">
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {#paginator#}
     <nav aria-label="...">
         {% if cars.has_other_pages %}
             <ul class="pagination pagination-sm justify-content-end">
@@ -26,5 +30,6 @@
             </ul>
         {% endif %}
     </nav>
+    {#end paginator#}
 </section>
 {% endblock content %}
