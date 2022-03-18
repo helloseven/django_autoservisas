@@ -1,0 +1,19 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans 'Search results' %}</h1>
+<h3>{% trans 'For' %}: <span class="text-bold">{{ query }}</span></h3>
+<h2>Found Results: {{ cars.count }}</h2>
+{% if cars %}
+<ul class="list-group">
+    {% for car in cars %}
+        <li class="list-group-item">
+            <a href="{% url 'car-detail' car.id %}">{{ car.license_plate}} {{ car.car_model }}</a> 
+        </li>
+    {% endfor %}
+</ul>
+
+{% else %}
+    <p class="text-danger">{% trans 'Nothing was found...' %}</p>
+{% endif %}
+{% endblock content %}

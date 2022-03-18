@@ -38,6 +38,14 @@
                         </form>
                     </li>
                     {# end Language Picker#}
+                    {# Search #}
+                    <li class="nav-item mx-4">
+                        <form action="{% url 'car-search' %}" method="get" class="form-inline my-2 my-md-0">
+                            <input name="query" class="form-control" type="text" placeholder="{% trans 'Search'%}...">
+                            <input class="btn btn-primary mx-4" type="submit" value="{% trans 'Search' %}">
+                        </form>
+                    </li>
+                    {# end Search #}
                 </ul>
             {% endblock navigation %}
         </div>

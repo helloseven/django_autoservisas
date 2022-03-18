@@ -9,5 +9,22 @@
         <li class="list-group-item"> {{car.id}} : <a href="{% url 'car-detail' car.id %}">{{ car.car_model.brand }} {{car.car_model.model}} {{ car.license_plate }}</a></li>
         {% endfor %}
     </ul>
+    <nav aria-label="...">
+        {% if cars.has_other_pages %}
+            <ul class="pagination pagination-sm justify-content-end">
+                {% for i in cars.paginator.page_range %}
+                    {% if cars.number == i %}
+                        <li class="page-item active">
+                            <a class="page-link" href="#">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </nav>
 </section>
 {% endblock content %}

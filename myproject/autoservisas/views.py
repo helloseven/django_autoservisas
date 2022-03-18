@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
@@ -25,10 +26,6 @@ class OrderDetailView(generic.DetailView):
     def get_success_url(self):
         return reverse_lazy('autoservisas:order-detail', kwargs={'pk' : self.object.id})
 
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['order'] = self.object
-    #     return context
 
 def index(request):
     num_services = Service.objects.count()
@@ -44,8 +41,14 @@ def index(request):
 
 
 def cars(request):
-    all_cars = Car.objects.all()
-    return render(request, 'autoservisas/all_cars.html', {'cars':all_cars})
+    paginator = Paginator(Car.objects.all(), 5)
+    page_number = request.GET.get('page')
+    paged_cars = paginator.get_page(page_number)
+    context = {
+        'cars' : paged_cars,
+        'cars_count' : Car.objects.count()
+    }
+    return render(request, 'autoservisas/all_cars.html', context=context)
 
 
 def car_detail(request, car_id):
@@ -53,3 +56,16 @@ def car_detail(request, car_id):
     return render(request, 'autoservisas/car_detail.html', {'car': car})
 
 
+def search_cars(request):
+    query = request.GET.get('query')
+    search_results = Car.objects.filter(
+        Q(client__username__icontains=query) |
+        Q(car_model__model__icontains=query) |
+        Q(license_plate__icontains=query) |
+        Q(vin__icontains=query)
+    )
+    context = {
+        'cars' : search_results,
+        'query' : query,
+    }
+    return render(request, 'autoservisas/search_cars.html', context=context)
