@@ -6,7 +6,7 @@
 {% if orders %}
     {% for order in orders %}
         <ul class="list-group mb-4"> 
-            <li class="list-group-item"><a href="{%url 'order-detail' order.id%}">{%trans 'ID' %}: {{order.id}}</a></li>
+            <li class="list-group-item"><a href="{%url 'autoservisas:order-detail' order.id%}">{%trans 'ID' %}: {{order.id}}</a></li>
             <li class="list-group-item">{%trans 'Services' %}: {% for service in order.service.all %} {{ service.name }}, {% endfor %} </li> 
             <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li>   
         </ul>

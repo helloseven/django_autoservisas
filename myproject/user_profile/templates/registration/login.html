@@ -1,0 +1,32 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n%}
+{% block content %}
+<div class="container mx-auto mt-5" style="width:400px;" >
+    <h1>Login</h1>
+    {% if form.errors %}
+        <p class="p2 my-2 bg-danger text-white">{% trans 'Login error, please try again.' %}</p>
+    {% endif %}
+
+    {% if next %}
+        {% if user.is_authenticated %}
+        <p class="p2 my-2 bg-danger text-white">{% trans 'You do not have persmission to see that page.' %}</p>
+        {% endif %}
+    {% endif %}
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">{% trans 'Username' %}</label>
+            <input type="text" class="form-control" name="username">
+        </div>
+        <div class="form-group">
+            <label for="password">{% trans 'Password' %}</label>
+            <input type="password" class="form-control" name="password">
+        </div>
+        
+        <input type="submit" class="btn btn-success mb-4 float-right" value="{% trans 'Login' %}">
+        <input type="hidden" name="next" value="{{ next }}">
+    </form>
+
+    <p>{% trans 'Forgot password' %}? <a href="{% url 'password_reset' %}">{% trans 'Reset password' %}</a>.</p>
+</div>
+{% endblock content %}

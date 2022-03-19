@@ -19,11 +19,29 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             {% block navigation %}
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">{% trans 'Home' %}</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'cars' %}">{% trans 'Cars' %}</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'orders' %}">{% trans 'Orders' %}</a></li>
-                    {# Language picker #}
-                    <li class="nav-item">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'autoservisas:index' %}">{% trans 'Home' %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'autoservisas:cars' %}">{% trans 'Cars' %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'autoservisas:orders' %}">{% trans 'Orders' %}</a></li>
+                   
+                    
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.is_superuser or request.user.is_staff %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">{% trans 'Admin' %}</a></li> 
+                        {% endif %}
+                        <li class="nav-item float-right"><a class="nav-link" href="{% url 'logout' %}?next={% url 'autoservisas:index' %}">{% trans 'Logout' %}</a></li>   
+                    {% else %}
+                        <li class="nav-item float-right"><a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">{% trans 'Login' %}</a></li>
+                    {% endif %} 
+                    {# Search #}
+                    <li class="nav-item mx-2">
+                        <form action="{% url 'autoservisas:car-search' %}" method="get" class="form-inline my-2 my-md-0">
+                            <input name="query" class="form-control" type="text" placeholder="{% trans 'Search'%}...">
+                            <input class="btn btn-primary mx-2" type="submit" value="{% trans 'Search' %}">
+                        </form>
+                    </li>
+                    {# end Search #}
+                     {# Language picker #}
+                     <li class="nav-item">
                         <form action="{% url 'set_language' %}" method="post" class="form-inline my-2 my-md-0 p-2">
                             {% csrf_token %}
                             <input name="next" type="hidden" value="{{ request.path }}">
@@ -37,15 +55,7 @@
                             </select> 
                         </form>
                     </li>
-                    {# end Language Picker#}
-                    {# Search #}
-                    <li class="nav-item mx-4">
-                        <form action="{% url 'car-search' %}" method="get" class="form-inline my-2 my-md-0">
-                            <input name="query" class="form-control" type="text" placeholder="{% trans 'Search'%}...">
-                            <input class="btn btn-primary mx-4" type="submit" value="{% trans 'Search' %}">
-                        </form>
-                    </li>
-                    {# end Search #}
+                    {# end Language Picker#}     
                 </ul>
             {% endblock navigation %}
         </div>
