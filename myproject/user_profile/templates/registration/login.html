@@ -18,15 +18,16 @@
             <label for="username">{% trans 'Username' %}</label>
             <input type="text" class="form-control" name="username">
         </div>
-        <div class="form-group">
+        <div class="form-group mb-0">
             <label for="password">{% trans 'Password' %}</label>
             <input type="password" class="form-control" name="password">
+            <small class="form-text text-muted">{% trans 'Forgot password' %}? <a href="{% url 'password_reset' %}">{% trans 'Reset password' %}</a>.</small>
         </div>
         
-        <input type="submit" class="btn btn-success mb-4 float-right" value="{% trans 'Login' %}">
+        <input type="submit" class="btn btn-success mt-0 float-right" value="{% trans 'Login' %}">
         <input type="hidden" name="next" value="{{ next }}">
     </form>
 
-    <p>{% trans 'Forgot password' %}? <a href="{% url 'password_reset' %}">{% trans 'Reset password' %}</a>.</p>
+    
 </div>
 {% endblock content %}

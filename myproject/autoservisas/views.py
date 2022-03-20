@@ -31,11 +31,14 @@ def index(request):
     num_services = Service.objects.count()
     num_instances_completed = OrderInstance.objects.filter(status__exact=2).count()
     num_cars = Car.objects.count()
+    num_visits = int(request.session.get('num_visits', 0)) + 1
+    request.session['num_visits'] = num_visits
 
     context = {
         'num_services' : num_services,
         'num_instances_completed' : num_instances_completed,
-        'num_cars' : num_cars
+        'num_cars' : num_cars,
+        'num_visits' : num_visits,
     }
     return render(request, 'autoservisas/index.html', context=context)
 
