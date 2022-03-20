@@ -1,6 +1,7 @@
 from django.conf import settings 
 from django.db import models
 from decimal import Decimal
+from datetime import date
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
@@ -63,10 +64,10 @@ class Order(models.Model):
     created_at = models.DateTimeField(_('Created at'), auto_now_add=True)
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='orders')
     service = models.ManyToManyField(Service, help_text=_('Select services for this order'), verbose_name=_('Service'))
-    total = models.DecimalField(_('Total'), max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
-
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    
     class Meta:
-        ordering = ['car', 'created_at']
+        ordering = ['created_at', 'client']
         verbose_name = _('Order')
         verbose_name_plural = _('Orders')
 
@@ -84,8 +85,7 @@ class Order(models.Model):
 class OrderInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, help_text=_('Unique UUID for this Order Instance.'))
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
-    quantity = models.PositiveIntegerField(_('Quantity'))
-    price = models.DecimalField(_('Price'), max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
+    due_back = models.DateField(_('Due back'), null=True, blank=True, db_index=True)
 
     ORDER_STATUS = (
         (0, _('None')),
@@ -104,7 +104,11 @@ class OrderInstance(models.Model):
     def __str__(self) -> str:
         return f'{self.order.id} {self.quantity} {self.price}'
 
-
+    @property
+    def is_overdue(self):
+        if self.status == 1 and self.due_back and self.due_back < date.today():
+            return True
+        return False
 
 
 
