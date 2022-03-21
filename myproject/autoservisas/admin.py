@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.urls import reverse_lazy
+from django.utils.html import format_html
 from django.utils.translation import gettext as _
 from .models import CarModel, Car, Service, Order, OrderInstance
 
@@ -20,10 +22,19 @@ class ServiceAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+class OrderInstanceInline(admin.TabularInline):
+    model = OrderInstance
+    field = ('id', 'status', 'due_back')
+    readonly_fields = ('id',)
+    can_delete = False
+    extra = 0
+
+
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_at', 'car' , 'get_services', 'total')
-    list_filter = ('car', 'service__name')
-    search_fields = ('car', 'service')
+    list_display = ('id', 'client', 'created_at', 'car' , 'get_services', 'total')
+    list_filter = ('client', 'service__name')
+    search_fields = ('client', 'service')
+    inlines = (OrderInstanceInline,)
 
     def get_services(self, obj):
         services = ', '.join(service.name for service in obj.service.all()[:2])
@@ -34,9 +45,16 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 class OrderInstanceAdmin(admin.ModelAdmin):
-    list_display =('id', 'order_id', 'status')
-    list_filter = ('status', 'order__service__name')
-    search_field = ('status',)
+    list_display =('get_short_id_link', 'get_client', 'status', 'due_back', 'is_overdue')
+    list_filter = ('status',)
+    search_field = ('id', 'status', 'is_overdue')
+    readonly_fields = ('id',)
+
+    def get_short_id_link(self,obj):
+        return format_html('<a href="{}">...{}</a>', reverse_lazy('admin:autoservisas_orderinstance_change', args=[obj.id]), str(obj.id)[:-12])
+
+    def get_client(self,obj):
+        return obj.order.client
 
 
 # Register your models here.

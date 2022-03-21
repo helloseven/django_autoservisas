@@ -28,6 +28,7 @@
                         {% if request.user.is_superuser or request.user.is_staff %}
                             <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">{% trans 'Admin' %}</a></li> 
                         {% endif %}
+                        <li class="nav-item float-right"><a class="nav-link" href="{% url 'autoservisas:my-orders' %}">{% trans 'My Orders' %}</a></li>   
                         <li class="nav-item float-right"><a class="nav-link" href="{% url 'logout' %}?next={% url 'autoservisas:index' %}">{% trans 'Logout' %}</a></li>   
                     {% else %}
                         <li class="nav-item float-right"><a class="nav-link" href="{% url 'login' %}?next={{ request.path }}">{% trans 'Login' %}</a></li>

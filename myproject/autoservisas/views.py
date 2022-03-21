@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
@@ -17,7 +18,11 @@ class OrderListView(generic.ListView):
     def get_queryset(self):
         return super().get_queryset()
 
-   
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+        
+
+
 class OrderDetailView(generic.DetailView):
     model = Order
     template_name = 'autoservisas/order_detail.html'
@@ -25,6 +30,17 @@ class OrderDetailView(generic.DetailView):
 
     def get_success_url(self):
         return reverse_lazy('autoservisas:order-detail', kwargs={'pk' : self.object.id})
+
+
+class UserOrdersListView(LoginRequiredMixin, generic.ListView):
+    model = Order
+    template_name = 'autoservisas/my_orders.html'
+    context_object_name = 'orders'
+    paginate_by = 5
+
+    def get_queryset(self):
+        return super().get_queryset().filter(client=self.request.user)
+        
 
 
 def index(request):

@@ -5,6 +5,7 @@ from datetime import date
 from django.core.validators import MinValueValidator
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
+from tinymce.models import HTMLField
 import uuid
 
 
@@ -28,6 +29,7 @@ class Car(models.Model):
     car_model = models.ForeignKey('CarModel', on_delete=models.SET_NULL, null=True, related_name='cars')
     vin = models.CharField(_('VIN code'), max_length=200)
     client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    description = HTMLField(_('Description'), max_length=1000, null=True, help_text=_('Short description of the car'))
     image = models.ImageField(_('Image'), upload_to='img', null=True, blank=True)
 
     class Meta:
@@ -84,7 +86,7 @@ class Order(models.Model):
 
 class OrderInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, help_text=_('Unique UUID for this Order Instance.'))
-    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+    order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True, related_name='order_instance')
     due_back = models.DateField(_('Due back'), null=True, blank=True, db_index=True)
 
     ORDER_STATUS = (
@@ -102,14 +104,13 @@ class OrderInstance(models.Model):
         verbose_name_plural = _('Order Instances')
 
     def __str__(self) -> str:
-        return f'{self.order.id} {self.quantity} {self.price}'
+        return f'{self.order.id} {self.order.car} {self.due_back}'
 
     @property
     def is_overdue(self):
         if self.status == 1 and self.due_back and self.due_back < date.today():
             return True
         return False
-
 
 
 
