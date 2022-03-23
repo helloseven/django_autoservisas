@@ -82,7 +82,11 @@ class Order(models.Model):
             sum += line.service.price * line.quantity
         return sum
         
-
+    @property
+    def is_overdue(self):
+        if self.due_back < date.today():
+            return True
+        
 
 class OrderLine(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

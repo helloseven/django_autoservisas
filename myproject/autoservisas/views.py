@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
@@ -27,11 +27,19 @@ def index(request):
     return render(request, 'autoservisas/index.html', context=context)
 
 
-class OrderListView(generic.ListView):
+class OrderListView(LoginRequiredMixin, generic.ListView):
     model = Order
     template_name = 'autoservisas/all_orders.html'
+    queryset = Order.objects.all()
     context_object_name = 'orders'
-    paginate_by = 2        
+    paginate_by = 5    
+
+    def get_queryset(self):
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            queryset = Order.objects.all()
+        else:
+            queryset = super().get_queryset().filter(car__client_id=self.request.user)
+        return queryset
 
 
 class OrderDetailView(generic.DetailView):
@@ -43,22 +51,11 @@ class OrderDetailView(generic.DetailView):
         return reverse_lazy('autoservisas:order-detail', kwargs={'pk' : self.object.id})
 
 
-class UserOrdersListView(LoginRequiredMixin, generic.ListView):
-    model = Order
-    template_name = 'autoservisas/my_orders.html'
-    context_object_name = 'orders'
-    paginate_by = 5
-
-    def get_queryset(self):
-        return super().get_queryset().filter(car__client_id=self.request.user)
-        
-
-
-
-
-
 def cars(request):
-    paginator = Paginator(Car.objects.all(), 5)
+    if request.user.is_superuser or request.user.is_staff:
+        paginator = Paginator(Car.objects.all(), 5)
+    else:
+        paginator = Paginator(Car.objects.filter(client_id=request.user), 5)
     page_number = request.GET.get('page')
     paged_cars = paginator.get_page(page_number)
     context = {
