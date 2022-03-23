@@ -6,22 +6,32 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
+from .models import Car, Service, Order, OrderLine
 
-from .models import Car, Service, Order, OrderInstance
+
+def index(request):
+    num_services = Service.objects.count()
+    num_orders = Order.objects.count()
+    num_orderlines_created = OrderLine.objects.count()
+    num_cars = Car.objects.count()
+    num_visits = int(request.session.get('num_visits', 0)) + 1
+    request.session['num_visits'] = num_visits
+
+    context = {
+        'num_services' : num_services,
+        'num_orders' : num_orders,
+        'num_orderlines_created' : num_orderlines_created,
+        'num_cars' : num_cars,
+        'num_visits' : num_visits,
+    }
+    return render(request, 'autoservisas/index.html', context=context)
 
 
 class OrderListView(generic.ListView):
     model = Order
     template_name = 'autoservisas/all_orders.html'
     context_object_name = 'orders'
-    paginate_by = 2    
-    
-    def get_queryset(self):
-        return super().get_queryset()
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
-        
+    paginate_by = 2        
 
 
 class OrderDetailView(generic.DetailView):
@@ -40,24 +50,11 @@ class UserOrdersListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        return super().get_queryset().filter(client=self.request.user)
+        return super().get_queryset().filter(car__client_id=self.request.user)
         
 
 
-def index(request):
-    num_services = Service.objects.count()
-    num_instances_completed = OrderInstance.objects.filter(status__exact=2).count()
-    num_cars = Car.objects.count()
-    num_visits = int(request.session.get('num_visits', 0)) + 1
-    request.session['num_visits'] = num_visits
 
-    context = {
-        'num_services' : num_services,
-        'num_instances_completed' : num_instances_completed,
-        'num_cars' : num_cars,
-        'num_visits' : num_visits,
-    }
-    return render(request, 'autoservisas/index.html', context=context)
 
 
 def cars(request):

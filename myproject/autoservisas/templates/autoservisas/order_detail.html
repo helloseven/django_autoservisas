@@ -4,13 +4,15 @@
 {% block content %}
 <h2>{% trans 'Order'%} {{order.id}}</h2>
         <ul class="list-group mb-4"> 
-            <li class="list-group-item">{%trans 'Client' %}: {{order.client}}</li>
-            <li class="list-group-item">{%trans 'Car' %}: {{order.car.license_plate}} {{order.car.car_model}}</li>
-            <li class="list-group-item">{%trans 'Due Date' %}: {%if order.order_instance%} {{ order.order_instance.first.due_back}} {%endif%} </li>
+            <li class="list-group-item">{%trans 'Client' %}: {{ order.car.client }}</li>
+            <li class="list-group-item">{%trans 'Car' %}: {{ order.car.license_plate }} {{ order.car.car_model }}</li>
+            <li class="list-group-item">{%trans 'Due Date' %}: {{ order.due_back }} </li>
             <h4 class="mt-4">{% trans 'Services' %}</h4>
-            {% for service in order.service.all %}
-                <li class="list-group-item">{{ service.name }} - {{service.price}}$,</li>
-            {% endfor %}
-            <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li>          
+            {% if order.order_lines %}
+                {% for line in order.order_lines.all %}
+                    <li class="list-group-item">{{ line.service.name }} - {{line.service.price}}$,</li>
+                {% endfor %}
+            {% endif %}
+            <li class="list-group-item bg-success text-white">{%trans 'Total Price' %}: {{ order.total }}$ </li>          
         </ul>
 {% endblock content %}

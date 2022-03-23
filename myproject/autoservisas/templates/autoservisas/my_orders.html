@@ -7,7 +7,7 @@
     {% for order in orders %}
         <ul class="list-group mb-2 {% for instance in order.order_instance.all %}{% if instance.is_overdue %}text-danger{% endif %}{% endfor %}"> 
             <li class="list-group-item"><a href="{%url 'autoservisas:order-detail' order.id%}">{%trans 'ID' %}: {{order.id}}</a></li>
-            <li class="list-group-item">{%trans 'Services' %}: {% for service in order.service.all %} {{ service.name }}, {% endfor %} </li> 
+            <li class="list-group-item">{%trans 'Services' %}: {% for line in order.order_lines.all %} {{ line.service.name }}, {% endfor %} </li> 
             <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li> 
             <li class="list-group-item">{%trans 'Due Date' %}: {%if order.order_instance %} {% for instance in order.order_instance.all %}{{ instance.due_back }} {% endfor %} {%endif%} </li>   
         </ul>

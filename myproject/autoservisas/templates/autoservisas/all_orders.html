@@ -3,18 +3,15 @@
 
 {% block content %}
 <h2>{% trans 'All Orders'%}</h2>
-
+{% for line in orders.order_lines.all%}
+AAAAA
+{% endfor %}
 {% if orders %}
     {% for order in orders %}
-        <ul class="list-group mb-4 {% for instance in order.order_instance.all %}{% if instance.is_overdue %}text-danger{% endif %}{% endfor %}"> 
+        <ul class="list-group mb-4"> 
             <li class="list-group-item"><a href="{%url 'autoservisas:order-detail' order.id%}">{%trans 'ID' %}: {{order.id}}</a></li>
-            <li class="list-group-item">{%trans 'Services' %}: {% for service in order.service.all %} {{ service.name }}, {% endfor %} </li> 
+            <li class="list-group-item">{%trans 'Services' %}: {%if order.order_lines %} {% for line in order.order_lines.all %} {{ line.service.name }},{% endfor %}{%endif%}</li> 
             <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li>   
-            {%if order.order_instance %}
-                {% for instance in order.order_instance.all %}
-                    <li class="list-group-item">{%trans 'Due Date' %}: {{ instance.due_back }}</li>   
-                {% endfor %}
-            {%endif%} 
         </ul>
     {% endfor %}
 {% endif %}

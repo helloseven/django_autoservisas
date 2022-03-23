@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse_lazy
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
-from .models import CarModel, Car, Service, Order, OrderInstance
+from .models import CarModel, Car, Service, Order, OrderLine
 
 class CarModelAdmin(admin.ModelAdmin):
     list_display = ('brand', 'model', 'engine', 'make_year')
@@ -22,8 +22,8 @@ class ServiceAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-class OrderInstanceInline(admin.TabularInline):
-    model = OrderInstance
+class OrderLineInline(admin.TabularInline):
+    model = OrderLine
     field = ('id', 'status', 'due_back')
     readonly_fields = ('id',)
     can_delete = False
@@ -31,35 +31,27 @@ class OrderInstanceInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'client', 'created_at', 'car' , 'get_services', 'total')
-    list_filter = ('client', 'service__name')
-    search_fields = ('client', 'service')
-    inlines = (OrderInstanceInline,)
+    list_display = ('created_at', 'car', 'total')
+    list_filter = ('car__client', 'car__license_plate')
+    search_fields = ('car__client',)
+    inlines = (OrderLineInline,)
 
-    def get_services(self, obj):
-        services = ', '.join(service.name for service in obj.service.all()[:2])
-        if obj.service.count() > 2:
-            return ', '.join([services, '...'])
-        return services
-    get_services.short_description = _('Services')
+    
+class OrderLineAdmin(admin.ModelAdmin):
+    list_display = ('id', 'order', 'get_service_name', 'quantity', 'get_service_price')
+    list_filter = ('order__car__client', 'order__car__license_plate', 'service__name')
 
+    def get_service_name(self, obj):
+        return obj.service.name
+    get_service_name.short_description = _('Service')
 
-class OrderInstanceAdmin(admin.ModelAdmin):
-    list_display =('get_short_id_link', 'get_client', 'status', 'due_back', 'is_overdue')
-    list_filter = ('status',)
-    search_field = ('id', 'status', 'is_overdue')
-    readonly_fields = ('id',)
-
-    def get_short_id_link(self,obj):
-        return format_html('<a href="{}">...{}</a>', reverse_lazy('admin:autoservisas_orderinstance_change', args=[obj.id]), str(obj.id)[:-12])
-
-    def get_client(self,obj):
-        return obj.order.client
-
+    def get_service_price(self, obj):
+        return obj.service.price
+    get_service_price.short_description = _('Price')
 
 # Register your models here.
 admin.site.register(CarModel, CarModelAdmin)
 admin.site.register(Car, CarAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderInstance, OrderInstanceAdmin)
+admin.site.register(OrderLine, OrderLineAdmin)
