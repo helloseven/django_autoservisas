@@ -11,6 +11,7 @@
         <li class="list-group-item">{% trans 'Engine'%}: {{ car.car_model.engine }}</li>
         <li class="list-group-item">{% trans 'Year'%}: {{ car.car_model.make_year }}</li>
         <li class="list-group-item">{% trans 'VIN'%}: {{ car.vin }}</li>
+        <li class="list-group-item">{% trans 'Description'%}: {{ car.description|safe }}</li>
     </ul>
 </section>
 {% endblock content %}

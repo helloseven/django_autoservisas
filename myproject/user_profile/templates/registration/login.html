@@ -2,11 +2,10 @@
 {% load i18n%}
 {% block content %}
 <div class="container mx-auto mt-5" style="width:400px;" >
-    <h1>Login</h1>
+    <h1>{% trans 'Login' %}</h1>
     {% if form.errors %}
         <p class="p2 my-2 bg-danger text-white">{% trans 'Login error, please try again.' %}</p>
     {% endif %}
-
     {% if next %}
         {% if user.is_authenticated %}
         <p class="p2 my-2 bg-danger text-white">{% trans 'You do not have persmission to see that page.' %}</p>

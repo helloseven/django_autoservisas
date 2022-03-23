@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
+
 from .models import Car, Service, Order, OrderInstance
 
 
