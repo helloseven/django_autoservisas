@@ -11,7 +11,8 @@ AAAAA
         <ul class="list-group mb-4 {% if order.is_overdue %}text-danger{% endif %}"> 
             <li class="list-group-item"><a href="{%url 'autoservisas:order-detail' order.id%}">{%trans 'ID' %}: {{order.id}}</a></li>
             <li class="list-group-item">{%trans 'Services' %}: {%if order.order_lines %} {% for line in order.order_lines.all %} {{ line.service.name }},{% endfor %}{%endif%}</li> 
-            <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li>   
+            <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li>  
+            <li class="list-group-item">{%trans 'Status' %}: {{ order.get_status_display }} </li>  
             <li class="list-group-item">{%trans 'Due Date' %}: {{ order.due_back }}</li> 
         </ul>
     {% endfor %}

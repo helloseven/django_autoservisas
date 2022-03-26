@@ -6,6 +6,7 @@
         <ul class="list-group mb-4"> 
             <li class="list-group-item">{%trans 'Client' %}: {{ order.car.client }}</li>
             <li class="list-group-item">{%trans 'Car' %}: {{ order.car.license_plate }} {{ order.car.car_model }}</li>
+            <li class="list-group-item">{%trans 'Status' %}: {{ order.get_status_display }}</li>
             <li class="list-group-item">{%trans 'Due Date' %}: {{ order.due_back }} </li>
             <h4 class="mt-4">{% trans 'Services' %}</h4>
             {% if order.order_lines %}

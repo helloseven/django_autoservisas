@@ -31,12 +31,20 @@ class OrderLineInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('created_at', 'car', 'total')
-    list_filter = ('car__client', 'car__license_plate')
-    search_fields = ('car__client',)
+    list_display = ('created_at', 'get_car_license_plate', 'get_car_client', 'total', 'status')
+    list_filter = ('status', 'car__client',)
+    search_fields = ('car__license_plate', 'status',)
     inlines = (OrderLineInline,)
 
-    
+    def get_car_license_plate(self, obj):
+        return obj.car.license_plate
+    get_car_license_plate.short_description = _('License Plate')
+
+    def get_car_client(self, obj):
+        return obj.car.client
+    get_car_client.short_description = _('Client')
+
+
 class OrderLineAdmin(admin.ModelAdmin):
     list_display = ('id', 'order', 'get_service_name', 'quantity', 'get_service_price')
     list_filter = ('order__car__client', 'order__car__license_plate', 'service__name')
@@ -49,7 +57,7 @@ class OrderLineAdmin(admin.ModelAdmin):
         return obj.service.price
     get_service_price.short_description = _('Price')
 
-# Register your models here.
+
 admin.site.register(CarModel, CarModelAdmin)
 admin.site.register(Car, CarAdmin)
 admin.site.register(Service, ServiceAdmin)

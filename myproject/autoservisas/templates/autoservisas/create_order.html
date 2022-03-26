@@ -1,0 +1,17 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n crispy_forms_tags %}
+{% block content %}
+<div class="content-section mx-auto" style="width:400px;">
+    <form action="" method="post">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom">{% trans 'Order a repair' %}</legend>
+            {{ form | crispy }}
+            <small class="form-text text-muted">{% trans 'Choose a car' %}</small>
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-primary float-right" type="submit">{% trans 'Order' %}</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

@@ -42,11 +42,14 @@ class Car(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        img = Image.open(self.image.path)
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+        try:
+            img = Image.open(self.image.path)
+            if img.height > 300 or img.width > 300:
+                output_size = (300, 300)
+                img.thumbnail(output_size)
+                img.save(self.image.path)
+        except:
+            pass
 
 
 class Service(models.Model):
@@ -67,6 +70,15 @@ class Order(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='orders')
     due_back = models.DateField(_('Due back'), null=True, blank=True, db_index=True)
 
+    ORDER_STATUS = (
+        (0, _('New')),
+        (1, _('Accepted')),
+        (2, _('Declined')),
+
+    )
+
+    status = models.PositiveIntegerField(_('Status'), default=0, choices=ORDER_STATUS)
+
     class Meta:
         ordering = ['created_at', 'car']
         verbose_name = _('Order')
@@ -84,8 +96,11 @@ class Order(models.Model):
         
     @property
     def is_overdue(self):
+        if self.due_back == None:
+            return False
         if self.due_back < date.today():
             return True
+        
         
 
 class OrderLine(models.Model):

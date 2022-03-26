@@ -1,0 +1,33 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n static crispy_forms_tags %}
+{% block content %}
+<div class="container mx-auto" style="width:400px;">
+    <div class="media">
+        <img class="rounded-circle account-img mx-auto d-block" src="{% if request.user.profile and request.user.profile.picture %}{{ request.user.profile.picture.url }}{% else %}{% static 'user_profile/img/default.jpg' %}{% endif %}">
+    </div>
+    <div class="text-center">
+        <h1 class="" >{% trans 'Profile of' %} {{ user.username }}</h1>
+    </div>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group mb-2">
+            <label for="email">{% trans 'Email' %}</label>
+            <input type="text" class="form-control" name="email" id="email" value="{{ u_form.email.value }}">
+            <small class="form-text bg-danger text-white">{{ form.email.errors }}</small>
+        </div>
+        <div class="form-group mb-2">
+            <label for="first_name">{% trans 'First Name' %}</label>
+            <input type="text" class="form-control" name="first_name" id="id_first_name" value="{{ u_form.first_name.value }}">
+        </div>
+        <div class="form-group mb-2">
+            <label for="last_name">{% trans 'Last Name' %}</label>
+            <input type="last_name" class="form-control" name="last_name" id="id_last_name" value="{{ u_form.last_name.value }}">
+        </div>
+        <div class="form-group mt-3">
+            {{ p_form.picture }}
+            <small class="form-text text-muted"><a href="{{ BASE_DIR }}/media/Unknown_QUrgm7P.png">{% trans 'Currently' %}: {{ p_form.instance.picture.url }}</a></small>
+        </div>
+        <input type="submit" class="btn btn-success mt-0 float-right" value="{% trans 'Update' %}">
+    </form>
+</div>
+{% endblock content%}

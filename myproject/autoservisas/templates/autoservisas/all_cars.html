@@ -8,7 +8,12 @@
         <ul class="list-group">
             {% for car in cars %}
             <li class="list-group-item"> {{car.id}} : <a href="{% url 'autoservisas:car-detail' car.id %}">{{ car.car_model.brand }} {{car.car_model.model}} {{ car.license_plate }}</a></li>
-            <img class="img-fluid" src="{% if car.image %}{{ car.image.url }}{% else %}{% static 'autoservisas/img/default.png' %}{% endif %}" alt="Image of a car">
+            <li class="list-group-item">
+                <a href="nav-link">
+                    <img class="img-fluid" src="{% if car.image %}{{ car.image.url }}{% else %}{% static 'autoservisas/img/default.png' %}{% endif %}" alt="Image of a car">
+                </a>
+            </li>
+            
             {% endfor %}
         </ul>
     {% endif %}
