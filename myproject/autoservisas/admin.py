@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import reverse_lazy
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
-from .models import CarModel, Car, Service, Order, OrderLine
+from .models import CarModel, Car, OrderComment, Service, Order, OrderLine
 
 class CarModelAdmin(admin.ModelAdmin):
     list_display = ('brand', 'model', 'engine', 'make_year')
@@ -58,8 +58,26 @@ class OrderLineAdmin(admin.ModelAdmin):
     get_service_price.short_description = _('Price')
 
 
+class OrderCommentAdmin(admin.ModelAdmin):
+    list_display = ('created_at', 'commenter', 'get_order_id')
+    list_filter = ('commenter',)
+    search_fields = ('order__id',)
+    readonly_fields = ('order', 'commenter',)
+
+    fieldsets = (
+        (None, {
+            'fields' : ('order', 'commenter', 'content', 'reply')
+        }),
+    )
+
+    def get_order_id(self, obj):
+        return obj.order.id
+    get_order_id.short_description = _('Order ID')
+
+
 admin.site.register(CarModel, CarModelAdmin)
 admin.site.register(Car, CarAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderLine, OrderLineAdmin)
+admin.site.register(OrderComment, OrderCommentAdmin)

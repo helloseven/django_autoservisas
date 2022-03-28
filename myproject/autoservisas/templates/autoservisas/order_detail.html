@@ -1,8 +1,7 @@
 {% extends 'autoservisas/base.html' %}
 {% load i18n %}
-
 {% block content %}
-<h2>{% trans 'Order'%} {{order.id}}</h2>
+<h2>{% trans 'Order'%}: {{order.id}}</h2>
         <ul class="list-group mb-4"> 
             <li class="list-group-item">{%trans 'Client' %}: {{ order.car.client }}</li>
             <li class="list-group-item">{%trans 'Car' %}: {{ order.car.license_plate }} {{ order.car.car_model }}</li>
@@ -14,6 +13,44 @@
                     <li class="list-group-item">{{ line.service.name }} - {{line.service.price}}$,</li>
                 {% endfor %}
             {% endif %}
-            <li class="list-group-item bg-success text-white">{%trans 'Total Price' %}: {{ order.total }}$ </li>          
+            <li class="list-group-item bg-success text-white">{%trans 'Total Price' %}: {{ order.total }}$ </li>    
         </ul>
+        <h4 class="mt-4">{% trans 'Comments' %}</h4> 
+            
+            {% if order.comments %}
+                {% for comment in order.comments.all %}
+                    <hr>
+                    <div class="d-flex flex-row">
+                        <div>
+                            <div class="d-flex flex-column p-2 border-right">
+                                <h5>{{ comment.commenter }}</h5>
+                                <img class="account-img" src="{{ comment.commenter.profile.picture.url }}" alt="">
+                            </div>  
+                        </div>
+                        <div class="p-2">
+                            <p> {{ comment.content | safe }}</p>
+                            <small class="text-muted">Posted: {{ comment.created_at }}</small>
+                            
+                        </div>
+                    </div>
+                    <hr> 
+                    {%if comment.reply %}
+                        <small class="text-danger">Admin replied:</small>
+                        <p> {{ comment.reply|safe }}</p>
+                        <hr>
+                    {% endif %} 
+                {% endfor %}
+            {% endif %}
+            
+
+            {% if request.user.is_authenticated and not request.user.is_staff %}
+            <div class="fieldWrapper">
+                <h5>{% trans 'Leave Your Comment' %}</h5>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form.content }}
+                    <br><input type="submit" value="{% trans 'Post' %}" class="btn btn-primary">
+                </form>
+            </div>
+            {% endif %}   
 {% endblock content %}

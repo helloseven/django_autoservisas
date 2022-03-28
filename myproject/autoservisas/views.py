@@ -5,9 +5,11 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import generic
+from django.views.generic.edit import FormMixin
 
 from .models import Car, Service, Order, OrderLine
-from .forms import OrderCreateForm
+from .forms import OrderCommentForm, OrderCreateForm
+
 
 def index(request):
     num_services = Service.objects.count()
@@ -60,15 +62,6 @@ class OrderListView(LoginRequiredMixin, generic.ListView):
             queryset = super().get_queryset().filter(car__client_id=self.request.user)
         return queryset
 
-    
-class OrderDetailView(generic.DetailView):
-    model = Order
-    template_name = 'autoservisas/order_detail.html'
-    context_object_name = 'order'
-
-    def get_success_url(self):
-        return reverse_lazy('autoservisas:order-detail', kwargs={'pk' : self.object.id})
-
 
 class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, generic.CreateView):
     model = Order
@@ -83,6 +76,58 @@ class OrderCreateView(LoginRequiredMixin, UserPassesTestMixin, generic.CreateVie
         kwargs = super(OrderCreateView, self).get_form_kwargs()
         kwargs['request'] = self.request
         return kwargs
+
+
+class OrderUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Order
+    form_class = OrderCreateForm
+    success_url = reverse_lazy('autoservisas:orders')
+    template_name = 'autoservisas/create_order.html'
+    context_object_name = 'order'
+    
+    def get_form_kwargs(self):
+        kwargs = super(OrderUpdateView, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+
+class OrderDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Order
+    template_name = 'autoservisas/delete_order.html'
+    context_object_name = 'order'
+    success_url = reverse_lazy('autoservisas:orders')
+
+
+class OrderDetailView(generic.DetailView, FormMixin):
+    model = Order
+    template_name = 'autoservisas/order_detail.html'
+    form_class = OrderCommentForm
+
+    def get_success_url(self):
+        return reverse_lazy('autoservisas:order-detail', kwargs={'pk' : self.object.id})
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = OrderCommentForm(initial={'order' : self.object })
+        context['order'] = self.object
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        form.instance.order = self.object
+        form.instance.commenter = self.request.user
+        form.save()
+        return super(OrderDetailView, self).form_valid(form)
+
+
+
 
 
 def search_cars(request):

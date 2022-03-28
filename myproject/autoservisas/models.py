@@ -124,13 +124,17 @@ class OrderLine(models.Model):
         return f'{self.id} {self.service.name} {self.quantity} {self.order.total}'
 
 
-
+class OrderComment(models.Model):
+    created_at = models.DateTimeField(_('Created at'), auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True, related_name='comments')
+    commenter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True, related_name='order_comments')
+    content = HTMLField(_('Comment'), max_length=1000)
+    reply = HTMLField(_('Reply'), max_length=1000, default='')
     
+    def __str__(self) -> str:
+        return f'{self.commenter.username}: {self.content}'
 
-
-
-
-
-    
-
-
+    class Meta: 
+        ordering = ['-created_at']
+        verbose_name = _('Order Comment')
+        verbose_name_plural = _('Order Comments')

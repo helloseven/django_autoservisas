@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from .models import Car, Order
+from .models import Car, Order, OrderComment
 
 class OrderCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -10,5 +10,15 @@ class OrderCreateForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ['car']
+        fields = ['car', 'due_back']
 
+
+class OrderCommentForm(forms.ModelForm):
+    class Meta:
+        model = OrderComment
+        fields = ['order', 'commenter', 'content']
+        widgets = {
+            'order' : forms.HiddenInput(),
+            'commenter' : forms.HiddenInput(),
+            'content' : forms.Textarea()
+        }

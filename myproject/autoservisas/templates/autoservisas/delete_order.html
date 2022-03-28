@@ -1,0 +1,15 @@
+{% extends 'autoservisas/base.html' %}
+{% load i18n %}
+{% block content %}
+
+<div class="container mx-auto" style="width:400px;">
+    <p>Are you sure you want to cancel Order "{{order.id}}"</p>
+    <div>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="button"  class="btn btn-primary" value="Cancel" onClick="window.location.href='{% url 'autoservisas:orders' %}';">
+            <input type="submit"  class="btn btn-danger" value="Confirm">
+        </form>
+    </div>
+</div> 
+{% endblock content %}
