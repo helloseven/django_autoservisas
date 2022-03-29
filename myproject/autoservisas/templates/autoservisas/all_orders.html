@@ -17,7 +17,7 @@ AAAAA
             <div class="col-9">
                 <ul class="list-group {% if order.is_overdue %}text-danger{% endif %}"> 
                     <li class="list-group-item"><a href="{%url 'autoservisas:order-detail' order.id%}">{%trans 'ID' %}: {{order.id}}</a></li>
-                    <li class="list-group-item">{%trans 'Services' %}: {%if order.order_lines %} {% for line in order.order_lines.all %} {{ line.service.name }},{% endfor %}{%endif%}</li> 
+                    <li class="list-group-item">{%trans 'Car' %}: {{ order.car }}</li> 
                     <li class="list-group-item">{%trans 'Total Price' %}: {{ order.total }}$ </li>  
                     <li class="list-group-item">{%trans 'Status' %}: {{ order.get_status_display }} </li>  
                     <li class="list-group-item">{%trans 'Due Date' %}: {{ order.due_back }}</li> 
@@ -26,12 +26,11 @@ AAAAA
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger">Cancel</button>
                         </form>
-                        <form action="{% url 'autoservisas:update-order' order.id %}" method="post">
+                        <form action="{% url 'autoservisas:update-order' order.id %}" method="get">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-primary">Edit</button>
                         </form>
                     </li>
-                    
                 </ul>
             </div>
         </div>  

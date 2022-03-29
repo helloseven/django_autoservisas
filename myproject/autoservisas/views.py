@@ -1,3 +1,4 @@
+from datetime import date, datetime
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
@@ -83,7 +84,6 @@ class OrderUpdateView(LoginRequiredMixin, generic.UpdateView):
     form_class = OrderCreateForm
     success_url = reverse_lazy('autoservisas:orders')
     template_name = 'autoservisas/create_order.html'
-    context_object_name = 'order'
     
     def get_form_kwargs(self):
         kwargs = super(OrderUpdateView, self).get_form_kwargs()

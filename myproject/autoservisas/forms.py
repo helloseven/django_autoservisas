@@ -7,7 +7,14 @@ class OrderCreateForm(forms.ModelForm):
         self.request = kwargs.pop('request')
         super(OrderCreateForm, self).__init__(*args, **kwargs)
         self.fields['car'].queryset = Car.objects.filter(client=self.request.user)
+        
 
+    class Meta:
+        model = Order
+        fields = ['car', 'due_back']
+
+
+class OrderUpdateForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ['car', 'due_back']
